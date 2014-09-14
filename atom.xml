@@ -4,7 +4,7 @@
   <title><![CDATA[Yet Another Android Blog]]></title>
   <link href="http://oleksandr-yefremov.github.io/atom.xml" rel="self"/>
   <link href="http://oleksandr-yefremov.github.io/"/>
-  <updated>2014-09-14T18:57:34+03:00</updated>
+  <updated>2014-09-14T23:04:16+03:00</updated>
   <id>http://oleksandr-yefremov.github.io/</id>
   <author>
     <name><![CDATA[Oleksandr Yefremov]]></name>
@@ -12,5 +12,14 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Life and Death of Fragment]]></title>
+    <link href="http://oleksandr-yefremov.github.io/blog/2014/09/14/life-and-death-of-fragment/"/>
+    <updated>2014-09-14T23:04:06+03:00</updated>
+    <id>http://oleksandr-yefremov.github.io/blog/2014/09/14/life-and-death-of-fragment</id>
+    <content type="html"><![CDATA[
+]]></content>
+  </entry>
   
 </feed>
