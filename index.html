@@ -9,7 +9,7 @@
   <meta name="author" content="Oleksandr Yefremov">
 
   
-  <meta name="description" content="There is a lot of stuff written about Activity and Fragment lifecycle and how to manage state and object retaining properly. So this is just a recap &hellip;">
+  <meta name="description" content="There is a lot of stuff written already about Activity and Fragment lifecycle and how to manage state and object retaining properly. So this is just &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,7 +69,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/09/14/draft-fragment/">Life and Death of Fragment</a></h1>
+      <h1 class="entry-title"><a href="/blog/2014/09/14/draft-fragment/">Fragment FTW!</a></h1>
     
     
       <p class="meta">
@@ -85,18 +85,16 @@
   </header>
 
 
-  <div class="entry-content"><p><br></p>
+  <div class="entry-content"><p>There is a lot of stuff written already about Activity and Fragment lifecycle and how to manage state and object retaining properly. So this is just a recap for myself, rather than tutorial.</p>
 
-<p>There is a lot of stuff written about Activity and Fragment lifecycle and how to manage state and object retaining properly. So this is just a recap for myself, rather than tutorial.</p>
+<p>Let&rsquo;s take a look at <strong>Activities</strong> and their destiny. There are 3 cases when and how activity can be destroyed.</p>
 
-<p>Let&rsquo;s take a look at <strong>Activities</strong> and their destiny. There are 3 cases when and how activity can be destroyed.
-<strong>First case</strong>: User enters activity <em>A</em>, from there goes to <em>B</em>, and then navigates back to <em>A</em>. Android won&rsquo;t save any instance state of activity <em>B</em> because user won&rsquo;t need this particular instance anymore. When he comes again to <em>B</em> he will get a fresh instance.
-<strong>Second case</strong>: User enters activity <em>A</em> and rotates screen (or other configuration change occurs). Android has to recreate activity, so first it calls <code>onSaveInstanceState(Bundle outState)</code>, destroys <em>A</em> and creates new instance, then calls <code>onRestoreInstanceState(Bundle savedInstanceState)</code> to restore state of views (the same can be done in <code>onCreate(Bundle savedInstanceState)</code>).</p>
-
-<p><strong>Third case</strong>: User enters activity <em>A</em>, from there goes to <em>B</em>, <em>C</em>, <em>D</em>… up the activity stack. At some point Android kills <em>A</em> to reclaim memory (or because you turned on useful feature <em>Developer options -> Don&rsquo;t keep activities</em>). Because user will eventually come back to <em>A</em>, system saves its state before killing and then recreates <em>A</em> with <code>savedInstanceState</code>.___
- Let&rsquo;s take a look at Fragments.Fragments are tightly coupled to activity&rsquo;s lifecycle</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/09/14/draft-fragment/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -115,7 +113,7 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2014/09/14/draft-fragment/">Life and Death of Fragment</a>
+        <a href="/blog/2014/09/14/draft-fragment/">Fragment FTW!</a>
       </li>
     
   </ul>
