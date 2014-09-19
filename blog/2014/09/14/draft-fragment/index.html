@@ -141,7 +141,7 @@
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
-<p>Personally, I think this get.get.get and a cast is rather ugly. Ideally, we should have no knowledge about parent activity, so we gonna use some DI magic (read more on DI forms <a href="http://www.martinfowler.com/articles/injection.html#FormsOfDependencyInjection">in Martin Fowler&#39;s article</a>:  </p>
+<p>Personally, I think this get.get.get and a cast could <a href="http://haacked.com/archive/2009/07/14/law-of-demeter-dot-counting.aspx/">look better</a>. Ideally, we should not talk to strangers, so we gonna use some DI magic (read more on DI forms <a href="http://www.martinfowler.com/articles/injection.html#FormsOfDependencyInjection">in Martin Fowler&#39;s article</a>:  </p>
 
 <ul>
 <li>Constructor injection</li>
@@ -227,14 +227,11 @@
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
-<div style="float: right;"><img class="caption" src="/images/fragment-lifecycle-setRetainInstance.png" width="317" height="847" title="test caption"></img></div>
+<div style="float: right;"><img class="caption" src="/images/fragment-lifecycle-setRetainInstance.png" width="244" height="652" title="test caption"></img></div>
 
-<p>Why do I put this in <code>onActivityCreated()</code>, rather than <code>onCreate()</code>? We know, that fragment lifecycle looks a little bit different with <code>setRetainInstance(true)</code>:  </p>
+<p>Why do I put this in <code>onActivityCreated()</code>, rather than <code>onCreate()</code>? Because fragment&#39;s <code>onCreate()</code> is not guaranteed to be called <strong>after</strong> activity&#39;s <code>onCreate()</code> and our dependency might not yet be initialized in activity.</p>
 
-<p>If we use <code>setRetainInstance(true)</code>, we could put this code into <code>onCreate()</code> so 
-Be sure to <strong>not</strong> move this code code into <code>onCreate()</code>, because fragment&#39;s <code>onCreate</code> is not guaranteed to be called <strong>after</strong> activity&#39;s and this can cause you some <em>&quot;Debugging Time, come on grab your friends&quot;</em>.</p>
-
-<p>Now every time activity is recreated</p>
+<p>Also keep in mind that with <code>setRetainInstance(true)</code> fragment&#39;s lifecycle becomes slightly different, see image to the right. In my case I had <code>wallet.addEventListener(txEventListener);</code> in <code>onCreate()</code> and <code>wallet.removeEventListener(txEventListener);</code> in <code>onDestroy()</code>. It was perfect, since these are not called on config change. Now when I add listener in <code>onActivityCreated()</code> I have to remove it in <code>onDestroyView()</code>.</p>
 </div>
 
 
