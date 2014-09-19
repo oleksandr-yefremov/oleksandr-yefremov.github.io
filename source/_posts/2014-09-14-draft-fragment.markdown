@@ -96,7 +96,11 @@ public class TransactionsFragment extends ListFragment {
 	}
 }
 ```
-Why do I put this in `onActivityCreated()`, rather than `onCreate()`? We know, that fragment lifecycle looks a little bit different with `setRetainInstance(true)`:
+<div style="float: right;"><img class="caption" src="/images/fragment-lifecycle-setRetainInstance.png" width="317" height="847" title="test caption"></img></div>
+
+Why do I put this in `onActivityCreated()`, rather than `onCreate()`? We know, that fragment lifecycle looks a little bit different with `setRetainInstance(true)`:  
+
+
 
 
 If we use `setRetainInstance(true)`, we could put this code into `onCreate()` so 
