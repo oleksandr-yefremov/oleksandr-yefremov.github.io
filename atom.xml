@@ -4,7 +4,7 @@
   <title><![CDATA[Yet Another Android Blog]]></title>
   <link href="http://oleksandr-yefremov.github.io/atom.xml" rel="self"/>
   <link href="http://oleksandr-yefremov.github.io/"/>
-  <updated>2014-09-27T22:53:27+03:00</updated>
+  <updated>2014-09-27T22:54:43+03:00</updated>
   <id>http://oleksandr-yefremov.github.io/</id>
   <author>
     <name><![CDATA[Oleksandr Yefremov]]></name>
@@ -12,14 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[#2]]></title>
-    <link href="http://oleksandr-yefremov.github.io/blog/2014/09/27/number-2/"/>
-    <updated>2014-09-27T22:25:23+03:00</updated>
-    <id>http://oleksandr-yefremov.github.io/blog/2014/09/27/number-2</id>
-    <content type="html"><![CDATA[]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[Fragments. Retaining state and objects.]]></title>
