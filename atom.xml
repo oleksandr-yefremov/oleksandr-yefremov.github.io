@@ -4,7 +4,7 @@
   <title><![CDATA[Yet Another Android Blog]]></title>
   <link href="http://oleksandr-yefremov.github.io/atom.xml" rel="self"/>
   <link href="http://oleksandr-yefremov.github.io/"/>
-  <updated>2014-09-19T13:04:31+03:00</updated>
+  <updated>2014-09-27T22:20:02+03:00</updated>
   <id>http://oleksandr-yefremov.github.io/</id>
   <author>
     <name><![CDATA[Oleksandr Yefremov]]></name>
@@ -14,11 +14,11 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Fragment FTW!]]></title>
-    <link href="http://oleksandr-yefremov.github.io/blog/2014/09/14/draft-fragment/"/>
+    <title type="html"><![CDATA[Fragments. Retaining State and Objects.]]></title>
+    <link href="http://oleksandr-yefremov.github.io/blog/2014/09/14/Fragments-Retaining-state-and-objects/"/>
     <updated>2014-09-14T23:04:06+03:00</updated>
-    <id>http://oleksandr-yefremov.github.io/blog/2014/09/14/draft-fragment</id>
-    <content type="html"><![CDATA[<p>There is a lot of stuff written already about Activity and Fragment lifecycle and how to manage state and object retaining properly. So this is just a recap for future myself, rather than a tutorial.</p>
+    <id>http://oleksandr-yefremov.github.io/blog/2014/09/14/Fragments-Retaining-state-and-objects</id>
+    <content type="html"><![CDATA[<p>There is a lot of good stuff written already about Activity and Fragment lifecycle and how to manage state and object retaining properly. So following is just a recap for future myself, rather than a tutorial.</p>
 
 <p>Let&#39;s take a look at <strong>Activities</strong> and their destiny. There are 3 cases when and how activity can be destroyed.</p>
 
@@ -33,9 +33,9 @@
 <hr>
 
 <p><br>
-<strong>Fragment</strong> is tightly coupled to activity&#39;s lifecycle. It also has methods <code>onSaveInstanceState()</code>, <code>onRestoreInstanceState()</code> and knows how to save its internal state.</p>
+<strong>Fragment</strong> is tightly coupled to activity&#39;s lifecycle. It also has methods <code>onSaveInstanceState()</code>, <del>onRestoreInstanceState()</del> you can do restore in <code>onActivityCreated()</code> or <code>onViewStateRestored()</code>.</p>
 
-<p>This is how to create a fragment. It is common to put this code into static factory method (see why for example <a href="http://www.androiddesignpatterns.com/2012/05/using-newinstance-to-instantiate.html">here</a>):</p>
+<p>This is how I usually create fragment. Why prefer static factory method, see for example <a href="http://www.androiddesignpatterns.com/2012/05/using-newinstance-to-instantiate.html">here</a>:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -53,7 +53,7 @@
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
-<p>Whatever we pass in arguments bundle, gets saved if fragment has to be recreated later. Now let&#39;s say we have a clear dependency in our fragment:</p>
+<p>Whatever we pass in arguments bundle also gets saved in case fragment has to be recreated later. Great! Now, let&#39;s say we have to pass an object to a fragment which is non-serializable. We can&#39;t put it in bundle, so my first thought would be:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -77,7 +77,7 @@
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
-<p>Personally, I think this get.get.get and a cast could <a href="http://haacked.com/archive/2009/07/14/law-of-demeter-dot-counting.aspx/">look better</a>. Ideally, we should not talk to strangers, so we gonna use some DI magic (read more on DI forms <a href="http://www.martinfowler.com/articles/injection.html#FormsOfDependencyInjection">in Martin Fowler&#39;s article</a>:  </p>
+<p>I think this get.get.get and a cast could <a href="http://haacked.com/archive/2009/07/14/law-of-demeter-dot-counting.aspx/">look better</a>. Ideally, we should not &quot;talk to strangers&quot;, so we could use some DI here (read more on DI forms in <a href="http://www.martinfowler.com/articles/injection.html#FormsOfDependencyInjection">Martin Fowler&#39;s article</a>):  </p>
 
 <ul>
 <li>Constructor injection</li>
@@ -93,17 +93,17 @@
 <span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="n">MyFragment</span> <span class="nf">newInstance</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">,</span> <span class="n">Wallet</span> <span class="n">wallet</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>  <span class="n">MyFragment</span> <span class="n">fragment</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">MyFragment</span><span class="o">();</span>
-</span><span class='line'>  <span class="n">fragment</span><span class="o">.</span><span class="na">wallet</span> <span class="o">=</span> <span class="n">wallet</span><span class="o">;</span>
+</span><span class='line'>  <span class="n">fragment</span><span class="o">.</span><span class="na">setWallet</span><span class="o">(</span><span class="n">wallet</span><span class="o">);</span>
 </span><span class='line'>  <span class="c1">/// index goes into args </span>
 </span><span class='line'>  <span class="k">return</span> <span class="n">fragment</span><span class="o">;</span>
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
-<p>Now any activity knows, that in order to construct this fragment it&#39;d have to provide a Wallet dependency to it.</p>
+<p>Now any activity knows, that in order to construct this fragment it&#39;d have to provide a Wallet dependency.</p>
 
-<p>Run the code, rotate the device and get <em>NPE</em>. This is <strong>second case</strong> from above: Activity is recreated, so is fragment by calling no-arg constructor together with the same bundle that was passed to <code>setArguments</code> last time. Instance fields of course lost, <code>wallet</code> is null. <a href="http://developer.android.com/guide/topics/resources/runtime-changes.html#RetainingAnObject">Android doc</a> helps us solve this by adding <code>setRetainInstance(true)</code>. Rotating works fine now, fragment instance is saved in memory and not recreated.</p>
+<p>Run the code, rotate the device and get <em>NPE</em>. This is our <strong>second case</strong>: Activity is recreated, so is fragment by calling no-arg constructor together with the same bundle that was passed to <code>setArguments</code> last time. Instance fields of course lost, <code>wallet</code> is null. <a href="http://developer.android.com/guide/topics/resources/runtime-changes.html#RetainingAnObject">Android doc</a> helps us solve this by adding <code>setRetainInstance(true)</code>. Rotating works fine now, fragment instance is saved in memory and not recreated.</p>
 
-<p>Speaking about <strong>third case</strong>, there is no retaining like with configuration change. So we end up with restrictions, that default constructor has to have no arguments - <code>new Fragment()</code>, and static factory method <code>newInstance(Dependency)</code>, where we could pass a parameter, won&#39;t be called at the recreation time.</p>
+<p>When we get to <strong>third case</strong>, there is no retaining like with configuration change. So we end up with restrictions, that default constructor has to have no arguments - <code>new Fragment()</code>, and static factory method <code>newInstance(Dependency)</code>, where we could pass a parameter, won&#39;t be called at the recreation time.</p>
 
 <p>We can code following:</p>
 
@@ -163,11 +163,21 @@
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
-<div style="float: right;"><img class="caption" src="http://oleksandr-yefremov.github.io/images/fragment-lifecycle-setRetainInstance.png" width="244" height="652" title="test caption"></img></div>
-
 <p>Why do I put this in <code>onActivityCreated()</code>, rather than <code>onCreate()</code>? Because fragment&#39;s <code>onCreate()</code> is not guaranteed to be called <strong>after</strong> activity&#39;s <code>onCreate()</code> and our dependency might not yet be initialized in activity.</p>
 
-<p>Also keep in mind that with <code>setRetainInstance(true)</code> fragment&#39;s lifecycle becomes slightly different, see image to the right. In my case I had <code>wallet.addEventListener(txEventListener);</code> in <code>onCreate()</code> and <code>wallet.removeEventListener(txEventListener);</code> in <code>onDestroy()</code>. It was perfect, since these are not called on config change. Now when I add listener in <code>onActivityCreated()</code> I have to remove it in <code>onDestroyView()</code>.</p>
+<hr>
+
+<p><br>
+<code>setRetainInstance(true)</code> has also couple of features you should keep in mind.</p>
+
+<ul>
+<li><p><code>Bundle savedInstanceState</code> is always null. This kinda makes sense, why would you want to restore state if fragment is not destroyed?</p></li>
+<li><p>Fragment&#39;s lifecycle becomes slightly different, i.e. <code>onCreate()</code> and <code>onDestroy()</code> won&#39;t be called:</p></li>
+</ul>
+
+<p><a href="http://oleksandr-yefremov.github.io/images/fragment-lifecycle-setRetainInstance_horiz.png"><img class="caption" src="http://oleksandr-yefremov.github.io/images/fragment-lifecycle-setRetainInstance_horiz.png" width="1213" height="162" /></a></p>
+
+<p>In my case I had <code>wallet.addEventListener(txEventListener)</code> in <code>onCreate()</code> and <code>wallet.removeEventListener(txEventListener)</code> in <code>onDestroy()</code>. It was perfect, since these are not called on config change with retained instance and I wasn&#39;t removing-adding the same listener. However, if I add listener in <code>onActivityCreated()</code> to be sure that activity is fully created, I have to remove it in <code>onDestroyView()</code>.</p>
 ]]></content>
   </entry>
   
