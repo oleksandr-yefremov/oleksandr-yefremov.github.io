@@ -4,7 +4,7 @@
   <title><![CDATA[Yet Another Android Blog]]></title>
   <link href="http://oleksandr-yefremov.github.io/atom.xml" rel="self"/>
   <link href="http://oleksandr-yefremov.github.io/"/>
-  <updated>2014-09-27T22:36:03+03:00</updated>
+  <updated>2014-09-27T22:50:58+03:00</updated>
   <id>http://oleksandr-yefremov.github.io/</id>
   <author>
     <name><![CDATA[Oleksandr Yefremov]]></name>
@@ -22,7 +22,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Fragments. Retaining State and Objects.]]></title>
+    <title type="html"><![CDATA[Fragments. Retaining state and objects.]]></title>
     <link href="http://oleksandr-yefremov.github.io/blog/2014/09/14/Fragments-Retaining-state-and-objects/"/>
     <updated>2014-09-14T23:04:06+03:00</updated>
     <id>http://oleksandr-yefremov.github.io/blog/2014/09/14/Fragments-Retaining-state-and-objects</id>
