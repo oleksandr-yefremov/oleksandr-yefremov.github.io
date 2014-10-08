@@ -101,7 +101,7 @@
     This is the easiest way, if you don&#39;t mind all your connections on both laptop and smartphone slowed down. NLC also able to simulate packet drops and latency.</p>
 
 <p><strong>4. Charles proxy</strong><br>
-Lets you throttle specific host accessed with http(s). You can also set breakpoints on everything.
+Lets you throttle specific host accessed with HTTP(S). You can also set breakpoints on everything.
 Keep in mind that free version shows &quot;waiting popups&quot; occasionally and restarts every 30 minutes.</p>
 
 <p><a href="/images/throttling/Charles proxy throttling.png"><img class="caption" style="background-color:white;" src="/images/throttling/Charles proxy throttling.png" width="267" height="250 " /></a></p>
@@ -120,7 +120,7 @@ In IceFloor navigate to <strong>Interfaces</strong> tab, click <code>Update</cod
 
 <p><a href="/images/throttling/IceFloor NAT.png"><img class="caption" style="background-color:white;" src="/images/throttling/IceFloor NAT.png" width="374" height="214 " /></a></p>
 
-<p>Last step, <strong>Firewall</strong> tab, select &quot;Outbound (NAT clients)&quot; list, add required protocols to &quot;Services in selected Address Group&quot; (I just added &quot;All services&quot;). And here is the thing we&#39;ve been chasing - Max. Bandwidth. Note, that we can&#39;t specify packet drop rate or latency here. If you need those as well as bandwidth control, NLC in step 3 is what I would use (or if you use http as a protocol, Charles also can do this).</p>
+<p>Last step, <strong>Firewall</strong> tab, select &quot;Outbound (NAT clients)&quot; list, add required protocols to &quot;Services in selected Address Group&quot; (I just added &quot;All services&quot;). And here is the thing we&#39;ve been chasing - Max. Bandwidth. Note, that we can&#39;t specify packet drop rate or latency here. If you need those as well as bandwidth control, NLC in step 3 is what I would use (or if you use HTTP as a protocol, Charles also can do this).</p>
 
 <p><a href="/images/throttling/IceFloor Firewall.png"><img class="caption" style="background-color:white;" src="/images/throttling/IceFloor Firewall.png" width="374" height="214 " /></a></p>
 
