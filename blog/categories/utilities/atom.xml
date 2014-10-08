@@ -4,7 +4,7 @@
   <title><![CDATA[Category: utilities | Yet Another Android Blog]]></title>
   <link href="http://oleksandr-yefremov.github.io/blog/categories/utilities/atom.xml" rel="self"/>
   <link href="http://oleksandr-yefremov.github.io/"/>
-  <updated>2014-10-08T19:38:14+03:00</updated>
+  <updated>2014-10-08T19:40:17+03:00</updated>
   <id>http://oleksandr-yefremov.github.io/</id>
   <author>
     <name><![CDATA[Oleksandr Yefremov]]></name>
@@ -41,6 +41,8 @@ Lets you throttle specific host accessed with http(s). You can also set breakpoi
 Keep in mind that free version shows &quot;waiting popups&quot; occasionally and restarts every 30 minutes.</p>
 
 <p><a href="http://oleksandr-yefremov.github.io/images/throttling/Charles proxy throttling.png"><img class="caption" style="background-color:white;" src="http://oleksandr-yefremov.github.io/images/throttling/Charles proxy throttling.png" width="267" height="250 " /></a></p>
+
+<p>Since I might need to use RTP (or smth not HTTP) in future, let&#39;s take one more step.</p>
 
 <p><strong>5. IceFloor or managing system firewall</strong><br>
 &quot;<a href="http://www.hanynet.com/icefloor/">IceFloor</a> is a graphic frontend for <a href="http://en.wikipedia.org/wiki/PF_%28firewall%29">PF</a>&quot;.</p>
