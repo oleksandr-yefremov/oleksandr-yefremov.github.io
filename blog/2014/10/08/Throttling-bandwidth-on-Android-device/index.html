@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Throttling bandwidth for Android app on physical device (not only http). - Yet Another Android Blog</title>
+  <meta name="author" content="Oleksandr Yefremov">
+
+  
+  <meta name="description" content="The other day I needed to throttle (limit bandwidth) of video streaming application on Android for testing purposes. iPhone has this feature built in &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://oleksandr-yefremov.github.io/blog/2014/10/08/Throttling-bandwidth-on-Android-device">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Yet Another Android Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Yet Another Android Blog</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:oleksandr-yefremov.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Throttling bandwidth for Android app on physical device (not only http).</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-10-08T14:41:15+03:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>2:41 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>The other day I needed to throttle (limit bandwidth) of video streaming application on Android for testing purposes. iPhone has this feature built in since iOS6.</p>
+
+<!-- more -->
+
+<p>As I use Mac OS, I will list instructions for it. Options that I considered:</p>
+
+<p><strong>1. Use <code>emulator -netspeed gsm</code></strong><br>
+    I need to be able to do the same thing on real device as well, so strike off.</p>
+
+<p><strong>2. Root phone, install or hack your own <a href="https://play.google.com/store/apps/details?id=com.oxplot.bradybound&amp;hl=en">application</a> which will limit bandwidth (or play with <a href="http://stackoverflow.com/questions/4658619/how-to-use-iptables-in-an-android-application">iptables</a>)</strong><br>
+    Not an option, cause I need clean stock firmware on device</p>
+
+<p><strong>3. Throttle bandwidth on WiFi router, if it supports such a feature.</strong><br>
+    And everybody connected to the same router will suffer. Besides, with some models you&#39;d need to restart router every time you want to turn on/off throttling.</p>
+
+<p><strong>3. If you have laptop (or PC with WiFi interface), connect to network via Ethernet, setup Internet Sharing from Ethernet to WiFi, connect device to laptop and use <a href="http://nshipster.com/network-link-conditioner/">Network Link Conditioner</a> on Mac or similar software which is easy and straightforward but can only limit all connections together.</strong><br>
+    This is the easiest way, if you don&#39;t mind all your connections on both laptop and smartphone slowed down. NLC also able to simulate packet drops and latency.</p>
+
+<p><strong>4. Charles proxy</strong><br>
+Lets you throttle specific host, but only on http(s). You can also set breakpoints on everything.
+Keep in mind that free version shows &quot;waiting popups&quot; occasionally and restarts every 30 minutes.</p>
+
+<p><a href="/images/throttling/Charles proxy throttling.png"><img class="caption" style="background-color:white;" src="/images/throttling/Charles proxy throttling.png" width="267" height="250 " /></a></p>
+
+<p><strong>5. IceFloor or managing system firewall</strong><br>
+&quot;<a href="http://www.hanynet.com/icefloor/">IceFloor</a> is a graphic frontend for <a href="http://en.wikipedia.org/wiki/PF_%28firewall%29">PF</a>&quot;.</p>
+
+<p>First we go through step 3 above: connect Ethernet, turn on Internet Sharing, connect our device to laptop. Make sure it works, browse some page or stream video from your app. 
+In IceFloor navigate to <strong>Interfaces</strong> tab, click <code>Update</code> button and locate Ethernet and bridge interfaces. In my case it was <code>en0</code>, <code>bridge100</code>.</p>
+
+<p><a href="/images/throttling/IceFloor Interfaces.png"><img class="caption" style="background-color:white;" src="/images/throttling/IceFloor Interfaces.png" width="374" height="214 " /></a></p>
+
+<p>Now to <strong>NAT</strong> tab, check &quot;Share internet connection&quot; and select interfaces that you located on previous screen.</p>
+
+<p><a href="/images/throttling/IceFloor NAT.png"><img class="caption" style="background-color:white;" src="/images/throttling/IceFloor NAT.png" width="374" height="214 " /></a></p>
+
+<p>Last step, <strong>Firewall</strong> tab, select &quot;Outbound (NAT clients)&quot; list, add required protocols to &quot;Services in selected Address Group&quot; (I just added &quot;All services&quot;). And here is the thing we&#39;ve been chasing - Max. Bandwidth. Note, that we can&#39;t specify packet drop rate or latency here. If you need those as well as bandwidth control, NLC in step 3 is what I would use (or if you use http as a protocol, Charles also can do this).</p>
+
+<p><a href="/images/throttling/IceFloor Firewall.png"><img class="caption" style="background-color:white;" src="/images/throttling/IceFloor Firewall.png" width="374" height="214 " /></a></p>
+
+<p>Click &quot;Start PF&quot; and you are good to go. Hit &quot;Apply&quot; every time you change any setting. To see if limit works for me, I usually go to <a href="http://speedtest.net">http://speedtest.net</a>.</p>
+
+<p>We can continue using Charles for debugging</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Oleksandr Yefremov</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-10-08T14:41:15+03:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>2:41 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/utilities/'>utilities</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://oleksandr-yefremov.github.io/blog/2014/10/08/Throttling-bandwidth-on-Android-device/" data-via="" data-counturl="http://oleksandr-yefremov.github.io/blog/2014/10/08/Throttling-bandwidth-on-Android-device/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/09/14/Fragments-Retaining-state-and-objects/" title="Previous Post: Fragments. Retaining state and objects.">&laquo; Fragments. Retaining state and objects.</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/08/Throttling-bandwidth-on-Android-device/">Throttling bandwidth for Android app on physical device (not only http).</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/14/Fragments-Retaining-state-and-objects/">Fragments. Retaining state and objects.</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Oleksandr Yefremov -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

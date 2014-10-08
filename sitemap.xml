@@ -3,6 +3,14 @@
   
   
   <url>
+    <loc>http://oleksandr-yefremov.github.io/blog/2014/10/08/Throttling-bandwidth-on-Android-device/</loc>
+    
+    <lastmod>2014-10-08T14:41:15+03:00</lastmod>
+    
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
     <loc>http://oleksandr-yefremov.github.io/blog/2014/09/14/Fragments-Retaining-state-and-objects/</loc>
     
     <lastmod>2014-09-14T23:04:06+03:00</lastmod>
@@ -13,14 +21,14 @@
   
   <url>
     <loc>http://oleksandr-yefremov.github.io/blog/archives/</loc>
-    <lastmod>2014-09-27T22:54:43+03:00</lastmod>
+    <lastmod>2014-10-08T19:36:18+03:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://oleksandr-yefremov.github.io/</loc>
-    <lastmod>2014-09-27T22:54:43+03:00</lastmod>
+    <lastmod>2014-10-08T19:36:18+03:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
