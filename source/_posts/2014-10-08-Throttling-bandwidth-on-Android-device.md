@@ -16,12 +16,12 @@ As I use Mac OS, I will list instructions for it. Options that I considered:
 	I need to be able to do the same thing on real device as well, so strike off.
 	
 **2. Root phone, install or hack your own [application](https://play.google.com/store/apps/details?id=com.oxplot.bradybound&hl=en) which will limit bandwidth (or play with [iptables](http://stackoverflow.com/questions/4658619/how-to-use-iptables-in-an-android-application))**  
-	Not an option, cause I need clean stock firmware on device
+	Not an option, cause I need clean stock firmware on device.
 	
 **3. Throttle bandwidth on WiFi router, if it supports such a feature.**  
 	And everybody connected to the same router will suffer. Besides, with some models you'd need to restart router every time you want to turn on/off throttling.
 	
-**3. If you have laptop (or desktop with WiFi interface), connect to network via Ethernet, setup Internet Sharing from Ethernet to WiFi, connect device to laptop and use [Network Link Conditioner](http://nshipster.com/network-link-conditioner/) on Mac or similar software which is easy and straightforward but can only limit all connections together.**  
+**3. If you have laptop (or desktop with WiFi interface), connect to network via Ethernet, setup Internet Sharing from Ethernet to WiFi, connect device to shared WiFi and use [Network Link Conditioner](http://nshipster.com/network-link-conditioner/) on Mac or similar software which is easy and straightforward but can only limit all connections together.**  
 	This is the easiest way, if you don't mind all your connections on both laptop and smartphone slowed down. **NLC** also able to simulate packet drops and latency.
 	
 **4. Charles proxy**  
@@ -35,7 +35,7 @@ Since I might need to use RTP (or smth not HTTP) in future, let's take one more 
 **5. IceFloor or managing system firewall**  
 "[IceFloor](http://www.hanynet.com/icefloor/) is a graphic frontend for [PF](http://en.wikipedia.org/wiki/PF_%28firewall%29)".
 
-First we go through step 3 above: connect Ethernet, turn on Internet Sharing, connect our device to laptop. Make sure it works, browse some page or stream video from your app. 
+First we go through step 3 above: connect Ethernet, turn on Internet Sharing, connect our device to shared WiFi. Make sure it works, browse some page or stream video from your app. 
 In **IceFloor** navigate to *Interfaces* tab, click `Update` button and locate Ethernet and bridge interfaces. In my case it was `en0`, `bridge100`.
 
 <a href="/images/throttling/IceFloor Interfaces.png"><img class="caption" style="background-color:white;" src="/images/throttling/IceFloor Interfaces.png" width="374" height="214 " /></a>
