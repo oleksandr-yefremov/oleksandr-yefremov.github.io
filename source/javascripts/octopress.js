@@ -10,6 +10,7 @@ function getNav() {
   mobileNav.find('select').bind('change', function(event) {
     if (event.target.value) { window.location.href = event.target.value; }
   });
+  $('.expander').simpleexpand();
 }
 
 function addSidebarToggler() {
