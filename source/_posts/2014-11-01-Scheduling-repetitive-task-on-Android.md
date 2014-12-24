@@ -11,10 +11,25 @@ published: true
 There is a task that needs to be repeated every *N* seconds. Might be even an interview question to see what options person would consider. With no other requirements or restrictions given, here is what pops up in my mind:
 
 <!-- more -->
+<style>
+.expand-container .expander.expanded {
+    padding-left: 13px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-image: url(/images/expanded.gif);
+}        
+        
+.expand-container .expander.collapsed {
+    padding-left: 13px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-image: url(/images/collapsed.gif);
+}        
+</style>
+
 As a task example I 
 
 **1. Service with Handler**  
-
 
 <div class="expand-container">
 <a class="expander" href="#">Expand source code</a>
