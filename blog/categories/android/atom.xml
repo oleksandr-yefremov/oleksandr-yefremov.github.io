@@ -1,0 +1,849 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: android | Yet Another Android Blog]]></title>
+  <link href="http://oleksandr-yefremov.github.io/blog/categories/android/atom.xml" rel="self"/>
+  <link href="http://oleksandr-yefremov.github.io/"/>
+  <updated>2015-12-14T01:25:01+02:00</updated>
+  <id>http://oleksandr-yefremov.github.io/</id>
+  <author>
+    <name><![CDATA[Oleksandr Yefremov]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Scheduling repetitive task on Android]]></title>
+    <link href="http://oleksandr-yefremov.github.io/blog/2014/11/01/Scheduling-repetitive-task-on-Android/"/>
+    <updated>2014-11-01T10:40:53+02:00</updated>
+    <id>http://oleksandr-yefremov.github.io/blog/2014/11/01/Scheduling-repetitive-task-on-Android</id>
+    <content type="html"><![CDATA[<script src="/javascripts/expand-collapse.js" type="text/javascript"></script>
+
+<p>There is a task that needs to be repeated every <em>N</em> seconds. Might be even an interview question to see what options person would consider. With no other requirements or restrictions given, here is what pops up in my mind:</p>
+
+<!-- more -->
+
+<style>
+.expand-container .expander.expanded {
+    padding-left: 13px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-image: url(/images/expanded.gif);
+}        
+        
+.expand-container .expander.collapsed {
+    padding-left: 13px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-image: url(/images/collapsed.gif);
+}        
+</style>
+
+<p>As a task example I </p>
+
+<p><strong>1. Service with Handler</strong>  </p>
+
+<div class="expand-container">
+<a class="expander" href="#">Expand source code</a>
+<div class="expandable-content">
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CurrencyManagerService</span> <span class="kd">extends</span> <span class="n">Service</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Logger</span> <span class="n">log</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="n">CurrencyManagerService</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">5</span><span class="o">;</span> <span class="c1">// seconds</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">long</span> <span class="n">ERROR_BACKOFF_TIMEOUT</span> <span class="o">=</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">;</span> <span class="c1">// seconds</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">PREFS_KEY_CURRENCY_RATES</span> <span class="o">=</span> <span class="s">&quot;.currencyRates&quot;</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Handler</span> <span class="n">handler</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">HandlerThread</span> <span class="n">fetchThread</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HandlerThread</span><span class="o">(</span><span class="s">&quot;fetchThread&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">fetchThread</span><span class="o">.</span><span class="na">setPriority</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">MIN_PRIORITY</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">fetchThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">handler</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Handler</span><span class="o">(</span><span class="n">fetchThread</span><span class="o">.</span><span class="na">getLooper</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">onStartCommand</span><span class="o">(</span><span class="n">Intent</span> <span class="n">intent</span><span class="o">,</span> <span class="kt">int</span> <span class="n">flags</span><span class="o">,</span> <span class="kt">int</span> <span class="n">startId</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&quot;Service started.&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// firstly, check if there is sticky event available already</span>
+</span><span class='line'>        <span class="c1">// (service may be restarted by system occasionally)</span>
+</span><span class='line'>        <span class="n">CurrencyRateResponse</span> <span class="n">currencyRateResponse</span> <span class="o">=</span> <span class="n">EventBus</span><span class="o">.</span><span class="na">getDefault</span><span class="o">().</span><span class="na">getStickyEvent</span><span class="o">(</span><span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">currencyRateResponse</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="c1">// then check if we have it stored in SharedPreferences</span>
+</span><span class='line'>            <span class="n">currencyRateResponse</span> <span class="o">=</span> <span class="n">PreferencesToGson</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">getApplicationContext</span><span class="o">())</span>
+</span><span class='line'>                                                    <span class="o">.</span><span class="na">getObject</span><span class="o">(</span><span class="n">PREFS_KEY_CURRENCY_RATES</span><span class="o">,</span> <span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">currencyRateResponse</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="c1">// app fresh start, go fetch rates now</span>
+</span><span class='line'>                <span class="n">handler</span><span class="o">.</span><span class="na">post</span><span class="o">(</span><span class="n">fetchCurrencyRatesRunnable</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>                <span class="c1">// found in SharedPreferences; post event and schedule fetch meanwhile to update cache</span>
+</span><span class='line'>                <span class="n">EventBus</span><span class="o">.</span><span class="na">getDefault</span><span class="o">().</span><span class="na">postSticky</span><span class="o">(</span><span class="n">currencyRateResponse</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">handler</span><span class="o">.</span><span class="na">post</span><span class="o">(</span><span class="n">fetchCurrencyRatesRunnable</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>            <span class="c1">// sticky event is there, schedule next fetch</span>
+</span><span class='line'>            <span class="n">handler</span><span class="o">.</span><span class="na">postDelayed</span><span class="o">(</span><span class="n">fetchCurrencyRatesRunnable</span><span class="o">,</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">START_STICKY</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Runnable</span> <span class="n">fetchCurrencyRatesRunnable</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Runnable</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&quot;Fetching CurrencyRate…&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">RestAdapter</span> <span class="n">restAdapter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RestAdapter</span><span class="o">.</span><span class="na">Builder</span><span class="o">()</span>
+</span><span class='line'>                                              <span class="o">.</span><span class="na">setEndpoint</span><span class="o">(</span><span class="s">&quot;http://btchouse.com:8080&quot;</span><span class="o">)</span>
+</span><span class='line'>                                              <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+</span><span class='line'>            <span class="n">CurrencyRatesRestService</span> <span class="n">restService</span> <span class="o">=</span> <span class="n">restAdapter</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">CurrencyRatesRestService</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">restService</span><span class="o">.</span><span class="na">getRate</span><span class="o">(</span><span class="s">&quot;USD&quot;</span><span class="o">,</span> <span class="n">currencyRatesRequestCallback</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Callback</span><span class="o">&lt;</span><span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">CurrencyRate</span><span class="o">&gt;</span> <span class="n">currencyRatesRequestCallback</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Callback</span><span class="o">&lt;</span><span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">CurrencyRate</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">success</span><span class="o">(</span><span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">CurrencyRate</span> <span class="n">currencyRate</span><span class="o">,</span> <span class="n">Response</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">ERROR_BACKOFF_TIMEOUT</span> <span class="o">=</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">;</span> <span class="c1">// set error timeout to default value</span>
+</span><span class='line'>            <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="n">currencyRate</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">CurrencyRateResponse</span> <span class="n">currencyRateResponse</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">CurrencyRateResponse</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">(),</span> <span class="n">currencyRate</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">PreferencesToGson</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">getApplicationContext</span><span class="o">())</span>
+</span><span class='line'>                             <span class="o">.</span><span class="na">putObject</span><span class="o">(</span><span class="n">PREFS_KEY_CURRENCY_RATES</span><span class="o">,</span> <span class="n">currencyRateResponse</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">EventBus</span><span class="o">.</span><span class="na">getDefault</span><span class="o">().</span><span class="na">postSticky</span><span class="o">(</span><span class="n">currencyRateResponse</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">handler</span><span class="o">.</span><span class="na">postDelayed</span><span class="o">(</span><span class="n">fetchCurrencyRatesRunnable</span><span class="o">,</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">failure</span><span class="o">(</span><span class="n">RetrofitError</span> <span class="n">error</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">log</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&quot;Error while fetching currency rates.&quot;</span><span class="o">,</span> <span class="n">error</span><span class="o">);</span>
+</span><span class='line'>            <span class="c1">// schedule next fetch with some backoff delay</span>
+</span><span class='line'>            <span class="n">handler</span><span class="o">.</span><span class="na">postDelayed</span><span class="o">(</span><span class="n">fetchCurrencyRatesRunnable</span><span class="o">,</span> <span class="n">ERROR_BACKOFF_TIMEOUT</span> <span class="o">*=</span> <span class="mi">2</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Nullable</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">IBinder</span> <span class="nf">onBind</span><span class="o">(</span><span class="n">Intent</span> <span class="n">intent</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// we don&#39;t allow binding to this service, since it doesn&#39;t make much sense</span>
+</span><span class='line'>        <span class="c1">// (i.e. other components don&#39;t need to send messages to service)</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+</div></div>
+
+<div class="expand-container">
+<a class="expander" href="#">Memory footprint</a>
+<div class="expandable-content">
+
+<a href="http://oleksandr-yefremov.github.io/images/scheduling_task/nexus5_device/1.png"><img class="caption" src="http://oleksandr-yefremov.github.io/images/scheduling_task/nexus5_device/1.png" /></a>
+<a href="http://oleksandr-yefremov.github.io/images/scheduling_task/nexusS_genymotion/1e.png"><img class="caption" src="http://oleksandr-yefremov.github.io/images/scheduling_task/nexusS_genymotion/1e.png" /></a>
+
+</div></div>
+    
+
+<p><strong>2. TimerTask</strong><br>
+Android doc for <a href="http://developer.android.com/reference/java/util/Timer.html">TimerTask</a> says &quot;Prefer <a href="http://developer.android.com/reference/java/util/concurrent/ScheduledThreadPoolExecutor.html"><code>ScheduledThreadPoolExecutor</code></a> for new code.&quot; </p>
+
+<div class="expandable-container">  
+<a class="expander" href="#">Expand source code</a>
+<div class="expandable-content">
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CurrencyManagerTimer</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Logger</span> <span class="n">log</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="n">CurrencyManagerTimer</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">5</span><span class="o">;</span> <span class="c1">// seconds</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">long</span> <span class="n">ERROR_BACKOFF_TIMEOUT</span> <span class="o">=</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">PREFS_KEY_CURRENCY_RATES</span> <span class="o">=</span> <span class="s">&quot;.currencyRates&quot;</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Context</span> <span class="n">context</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Timer</span> <span class="n">timer</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">TimerTask</span> <span class="n">timerTask</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">CurrencyManagerTimer</span><span class="o">(</span><span class="nd">@NonNull</span> <span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">context</span> <span class="o">=</span> <span class="n">context</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">timer</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Timer</span><span class="o">(</span><span class="s">&quot;fetchTimer&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">timerTask</span> <span class="o">=</span> <span class="n">createTimerTask</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">start</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">TimerTask</span> <span class="nf">createTimerTask</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">TimerTask</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="nd">@Override</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&quot;Fetching CurrencyRate…&quot;</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">RestAdapter</span> <span class="n">restAdapter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RestAdapter</span><span class="o">.</span><span class="na">Builder</span><span class="o">()</span>
+</span><span class='line'>                                                  <span class="o">.</span><span class="na">setEndpoint</span><span class="o">(</span><span class="s">&quot;http://localhost:8080&quot;</span><span class="o">)</span>
+</span><span class='line'>                                                  <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+</span><span class='line'>                <span class="n">CurrencyRatesRestService</span> <span class="n">restService</span> <span class="o">=</span> <span class="n">restAdapter</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">CurrencyRatesRestService</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">restService</span><span class="o">.</span><span class="na">getRate</span><span class="o">(</span><span class="s">&quot;USD&quot;</span><span class="o">,</span> <span class="n">currencyRatesRequestCallback</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">};</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Callback</span><span class="o">&lt;</span><span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">CurrencyRate</span><span class="o">&gt;</span> <span class="n">currencyRatesRequestCallback</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Callback</span><span class="o">&lt;</span><span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">CurrencyRate</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">success</span><span class="o">(</span><span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">CurrencyRate</span> <span class="n">currencyRate</span><span class="o">,</span> <span class="n">Response</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">ERROR_BACKOFF_TIMEOUT</span> <span class="o">=</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">;</span> <span class="c1">// set error timeout to default</span>
+</span><span class='line'>            <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="n">currencyRate</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">CurrencyRateResponse</span> <span class="n">currencyRateResponse</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">CurrencyRateResponse</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">(),</span> <span class="n">currencyRate</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">PreferencesToGson</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">context</span><span class="o">)</span>
+</span><span class='line'>                             <span class="o">.</span><span class="na">putObject</span><span class="o">(</span><span class="n">PREFS_KEY_CURRENCY_RATES</span><span class="o">,</span> <span class="n">currencyRateResponse</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">EventBus</span><span class="o">.</span><span class="na">getDefault</span><span class="o">().</span><span class="na">postSticky</span><span class="o">(</span><span class="n">currencyRateResponse</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">failure</span><span class="o">(</span><span class="n">RetrofitError</span> <span class="n">error</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">log</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&quot;Error while fetching currency rates.&quot;</span><span class="o">,</span> <span class="n">error</span><span class="o">);</span>
+</span><span class='line'>            <span class="c1">// schedule next fetch with some backoff delay</span>
+</span><span class='line'>            <span class="n">timerTask</span><span class="o">.</span><span class="na">cancel</span><span class="o">();</span>
+</span><span class='line'>            <span class="n">timerTask</span> <span class="o">=</span> <span class="n">createTimerTask</span><span class="o">();</span>
+</span><span class='line'>            <span class="n">timer</span><span class="o">.</span><span class="na">scheduleAtFixedRate</span><span class="o">(</span><span class="n">timerTask</span><span class="o">,</span> <span class="n">ERROR_BACKOFF_TIMEOUT</span> <span class="o">*=</span> <span class="mi">2</span><span class="o">,</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&quot;Manager started.&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// firstly, check if there is sticky event available already</span>
+</span><span class='line'>        <span class="n">CurrencyRateResponse</span> <span class="n">currencyRateResponse</span> <span class="o">=</span> <span class="n">EventBus</span><span class="o">.</span><span class="na">getDefault</span><span class="o">().</span><span class="na">getStickyEvent</span><span class="o">(</span><span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">currencyRateResponse</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="c1">// then check if we have it stored in SharedPreferences</span>
+</span><span class='line'>            <span class="n">currencyRateResponse</span> <span class="o">=</span> <span class="n">PreferencesToGson</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">context</span><span class="o">)</span>
+</span><span class='line'>                                                    <span class="o">.</span><span class="na">getObject</span><span class="o">(</span><span class="n">PREFS_KEY_CURRENCY_RATES</span><span class="o">,</span> <span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">currencyRateResponse</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="c1">// app fresh start, go fetch rates now</span>
+</span><span class='line'>                <span class="n">timer</span><span class="o">.</span><span class="na">scheduleAtFixedRate</span><span class="o">(</span><span class="n">timerTask</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>                <span class="c1">// found in SharedPreferences; post event and schedule fetch meanwhile to update cache</span>
+</span><span class='line'>                <span class="n">EventBus</span><span class="o">.</span><span class="na">getDefault</span><span class="o">().</span><span class="na">postSticky</span><span class="o">(</span><span class="n">currencyRateResponse</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">timer</span><span class="o">.</span><span class="na">scheduleAtFixedRate</span><span class="o">(</span><span class="n">timerTask</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>            <span class="c1">// sticky event is there, schedule next fetch</span>
+</span><span class='line'>            <span class="n">timer</span><span class="o">.</span><span class="na">scheduleAtFixedRate</span><span class="o">(</span><span class="n">timerTask</span><span class="o">,</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">,</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+</div></div>
+
+<div class="expand-container">
+<a class="expander" href="#">Memory footprint</a>
+<div class="expandable-content">
+
+<a href="http://oleksandr-yefremov.github.io/images/scheduling_task/nexus5_device/2.png"><img class="caption" src="http://oleksandr-yefremov.github.io/images/scheduling_task/nexus5_device/2.png" /></a>
+<a href="http://oleksandr-yefremov.github.io/images/scheduling_task/nexusS_genymotion/2e.png"><img class="caption" src="http://oleksandr-yefremov.github.io/images/scheduling_task/nexusS_genymotion/2e.png" /></a>
+
+</div></div>
+
+<p><strong>3. ScheduledThreadPoolExecutor</strong></p>
+
+<div class="expand-container">
+<a class="expander" href="#">Expand source code</a>
+<div class="expandable-content">
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CurrencyManagerScheduledExecutor</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Logger</span> <span class="n">log</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="n">CurrencyManagerScheduledExecutor</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">5</span><span class="o">;</span> <span class="c1">// seconds</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">long</span> <span class="n">ERROR_BACKOFF_TIMEOUT</span> <span class="o">=</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">PREFS_KEY_CURRENCY_RATES</span> <span class="o">=</span> <span class="s">&quot;.currencyRates&quot;</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Context</span> <span class="n">context</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">ScheduledFuture</span><span class="o">&lt;?&gt;</span> <span class="n">fetchFuture</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">ScheduledThreadPoolExecutor</span> <span class="n">executor</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">CurrencyManagerScheduledExecutor</span><span class="o">(</span><span class="nd">@NonNull</span> <span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">context</span> <span class="o">=</span> <span class="n">context</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">executor</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">ScheduledThreadPoolExecutor</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">start</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Runnable</span> <span class="n">fetchRunnable</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Runnable</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&quot;Fetching CurrencyRate…&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">RestAdapter</span> <span class="n">restAdapter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RestAdapter</span><span class="o">.</span><span class="na">Builder</span><span class="o">()</span>
+</span><span class='line'>                                              <span class="o">.</span><span class="na">setEndpoint</span><span class="o">(</span><span class="s">&quot;http://localhost:8080&quot;</span><span class="o">)</span>
+</span><span class='line'>                                              <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+</span><span class='line'>            <span class="n">CurrencyRatesRestService</span> <span class="n">restService</span> <span class="o">=</span> <span class="n">restAdapter</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">CurrencyRatesRestService</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">restService</span><span class="o">.</span><span class="na">getRate</span><span class="o">(</span><span class="s">&quot;USD&quot;</span><span class="o">,</span> <span class="n">currencyRatesRequestCallback</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Callback</span><span class="o">&lt;</span><span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">CurrencyRate</span><span class="o">&gt;</span> <span class="n">currencyRatesRequestCallback</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Callback</span><span class="o">&lt;</span><span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">CurrencyRate</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">success</span><span class="o">(</span><span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">CurrencyRate</span> <span class="n">currencyRate</span><span class="o">,</span> <span class="n">Response</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">ERROR_BACKOFF_TIMEOUT</span> <span class="o">=</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">;</span> <span class="c1">// default error timeout</span>
+</span><span class='line'>            <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="n">currencyRate</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">CurrencyRateResponse</span> <span class="n">currencyRateResponse</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">CurrencyRateResponse</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">(),</span> <span class="n">currencyRate</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">PreferencesToGson</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">context</span><span class="o">)</span>
+</span><span class='line'>                             <span class="o">.</span><span class="na">putObject</span><span class="o">(</span><span class="n">PREFS_KEY_CURRENCY_RATES</span><span class="o">,</span> <span class="n">currencyRateResponse</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">EventBus</span><span class="o">.</span><span class="na">getDefault</span><span class="o">().</span><span class="na">postSticky</span><span class="o">(</span><span class="n">currencyRateResponse</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">failure</span><span class="o">(</span><span class="n">RetrofitError</span> <span class="n">error</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">log</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&quot;Error while fetching currency rates.&quot;</span><span class="o">,</span> <span class="n">error</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="c1">// cancel all subsequent fixed-rate tasks because of an error</span>
+</span><span class='line'>            <span class="n">fetchFuture</span><span class="o">.</span><span class="na">cancel</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+</span><span class='line'>            <span class="c1">// schedule next fetch with some backoff delay.</span>
+</span><span class='line'>            <span class="c1">// if error disappears, tasks will be fixed-rate again with &quot;period&quot; parameter</span>
+</span><span class='line'>            <span class="n">fetchFuture</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="na">scheduleAtFixedRate</span><span class="o">(</span><span class="n">fetchRunnable</span><span class="o">,</span>
+</span><span class='line'>                                                       <span class="n">ERROR_BACKOFF_TIMEOUT</span> <span class="o">*=</span> <span class="mi">2</span><span class="o">,</span>    <span class="c1">// backoff delay</span>
+</span><span class='line'>                                                       <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">,</span>  <span class="c1">// period</span>
+</span><span class='line'>                                                       <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&quot;Manager started.&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// First, check if there is sticky event available already</span>
+</span><span class='line'>        <span class="n">CurrencyRateResponse</span> <span class="n">currencyRateResponse</span> <span class="o">=</span> <span class="n">EventBus</span><span class="o">.</span><span class="na">getDefault</span><span class="o">().</span><span class="na">getStickyEvent</span><span class="o">(</span><span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">currencyRateResponse</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="c1">// then check if we have it stored in SharedPreferences</span>
+</span><span class='line'>            <span class="n">currencyRateResponse</span> <span class="o">=</span> <span class="n">PreferencesToGson</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">context</span><span class="o">)</span>
+</span><span class='line'>                                                    <span class="o">.</span><span class="na">getObject</span><span class="o">(</span><span class="n">PREFS_KEY_CURRENCY_RATES</span><span class="o">,</span> <span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">currencyRateResponse</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="c1">// app fresh start, go fetch rates now</span>
+</span><span class='line'>                <span class="n">fetchFuture</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="na">scheduleAtFixedRate</span><span class="o">(</span><span class="n">fetchRunnable</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">,</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>                <span class="c1">// found in SharedPreferences; post event and schedule fetch meanwhile to update cache</span>
+</span><span class='line'>                <span class="n">EventBus</span><span class="o">.</span><span class="na">getDefault</span><span class="o">().</span><span class="na">postSticky</span><span class="o">(</span><span class="n">currencyRateResponse</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">fetchFuture</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="na">scheduleAtFixedRate</span><span class="o">(</span><span class="n">fetchRunnable</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">,</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>            <span class="c1">// sticky event is there, schedule next fetch</span>
+</span><span class='line'>            <span class="n">fetchFuture</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="na">scheduleAtFixedRate</span><span class="o">(</span><span class="n">fetchRunnable</span><span class="o">,</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">,</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">,</span>
+</span><span class='line'>                                                       <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+</div></div>
+
+<div class="expand-container">
+<a class="expander" href="#">Memory footprint</a>
+<div class="expandable-content">
+
+<a href="http://oleksandr-yefremov.github.io/images/scheduling_task/nexus5_device/3.png"><img class="caption" src="http://oleksandr-yefremov.github.io/images/scheduling_task/nexus5_device/3.png" /></a>
+<a href="http://oleksandr-yefremov.github.io/images/scheduling_task/nexusS_genymotion/3e.png"><img class="caption" src="http://oleksandr-yefremov.github.io/images/scheduling_task/nexusS_genymotion/3e.png" /></a>
+
+</div></div>
+
+<p><strong>4. AlarmManager</strong>
+From the <a href="http://developer.android.com/reference/android/app/AlarmManager.html">AlarmManager</a> doc:<br>
+Note: The Alarm Manager is intended for cases where you want to have your application code run at a specific time, even if your application is not currently running. For normal timing operations (ticks, timeouts, etc) it is easier and much more efficient to use Handler.</p>
+
+<div class="expand-container">
+<a class="expander" href="#">Expand source code</a>
+<div class="expandable-content">
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CurrencyManagerAlarm</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Logger</span> <span class="n">log</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="n">CurrencyManagerAlarm</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">5</span><span class="o">;</span> <span class="c1">// seconds</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">long</span> <span class="n">ERROR_BACKOFF_TIMEOUT</span> <span class="o">=</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">PREFS_KEY_CURRENCY_RATES</span> <span class="o">=</span> <span class="s">&quot;.currencyRates&quot;</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">intentFilter</span> <span class="o">=</span> <span class="s">&quot;.managers.sendSchedule&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Context</span> <span class="n">context</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">PendingIntent</span> <span class="n">pendingIntent</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">AlarmManager</span> <span class="n">alarmManager</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">CurrencyManagerAlarm</span><span class="o">(</span><span class="nd">@NonNull</span> <span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">context</span> <span class="o">=</span> <span class="n">context</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">alarmManager</span> <span class="o">=</span> <span class="o">(</span><span class="n">AlarmManager</span><span class="o">)</span> <span class="n">context</span><span class="o">.</span><span class="na">getSystemService</span><span class="o">(</span><span class="n">Context</span><span class="o">.</span><span class="na">ALARM_SERVICE</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Intent</span> <span class="n">alarmIntent</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Intent</span><span class="o">(</span><span class="n">intentFilter</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">pendingIntent</span> <span class="o">=</span> <span class="n">PendingIntent</span><span class="o">.</span><span class="na">getBroadcast</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">alarmIntent</span><span class="o">,</span> <span class="n">PendingIntent</span><span class="o">.</span><span class="na">FLAG_UPDATE_CURRENT</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">FetchCommandReceiver</span> <span class="n">fetchCommandReceiver</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">FetchCommandReceiver</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">context</span><span class="o">.</span><span class="na">registerReceiver</span><span class="o">(</span><span class="n">fetchCommandReceiver</span><span class="o">,</span> <span class="k">new</span> <span class="nf">IntentFilter</span><span class="o">(</span><span class="n">intentFilter</span><span class="o">));</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">start</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Runnable</span> <span class="n">fetchRunnable</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Runnable</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&quot;Fetching CurrencyRate…&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">RestAdapter</span> <span class="n">restAdapter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RestAdapter</span><span class="o">.</span><span class="na">Builder</span><span class="o">()</span>
+</span><span class='line'>                                              <span class="o">.</span><span class="na">setEndpoint</span><span class="o">(</span><span class="s">&quot;http://localhost:8080&quot;</span><span class="o">)</span>
+</span><span class='line'>                                              <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+</span><span class='line'>            <span class="n">CurrencyRatesRestService</span> <span class="n">restService</span> <span class="o">=</span> <span class="n">restAdapter</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">CurrencyRatesRestService</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">restService</span><span class="o">.</span><span class="na">getRate</span><span class="o">(</span><span class="s">&quot;USD&quot;</span><span class="o">,</span> <span class="n">currencyRatesRequestCallback</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Callback</span><span class="o">&lt;</span><span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">CurrencyRate</span><span class="o">&gt;</span> <span class="n">currencyRatesRequestCallback</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Callback</span><span class="o">&lt;</span><span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">CurrencyRate</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">success</span><span class="o">(</span><span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">CurrencyRate</span> <span class="n">currencyRate</span><span class="o">,</span> <span class="n">Response</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">ERROR_BACKOFF_TIMEOUT</span> <span class="o">=</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">;</span>
+</span><span class='line'>            <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="n">currencyRate</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">CurrencyRateResponse</span> <span class="n">currencyRateResponse</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">CurrencyRateResponse</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">(),</span> <span class="n">currencyRate</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">PreferencesToGson</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">context</span><span class="o">)</span>
+</span><span class='line'>                             <span class="o">.</span><span class="na">putObject</span><span class="o">(</span><span class="n">PREFS_KEY_CURRENCY_RATES</span><span class="o">,</span> <span class="n">currencyRateResponse</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">EventBus</span><span class="o">.</span><span class="na">getDefault</span><span class="o">().</span><span class="na">postSticky</span><span class="o">(</span><span class="n">currencyRateResponse</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">failure</span><span class="o">(</span><span class="n">RetrofitError</span> <span class="n">error</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">log</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&quot;Error while fetching currency rates.&quot;</span><span class="o">,</span> <span class="n">error</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="c1">// Cancel all subsequent fixed-rate tasks because of an error.</span>
+</span><span class='line'>            <span class="c1">// Schedule next fetch with some backoff delay.</span>
+</span><span class='line'>            <span class="c1">// If error disappears, tasks will be fixed-rate again with &quot;period&quot; parameter</span>
+</span><span class='line'>            <span class="n">alarmManager</span><span class="o">.</span><span class="na">cancel</span><span class="o">(</span><span class="n">pendingIntent</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="kt">long</span> <span class="n">now</span> <span class="o">=</span> <span class="n">Calendar</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">getTimeInMillis</span><span class="o">();</span>
+</span><span class='line'>            <span class="n">alarmManager</span><span class="o">.</span><span class="na">setInexactRepeating</span><span class="o">(</span><span class="n">AlarmManager</span><span class="o">.</span><span class="na">RTC</span><span class="o">,</span>
+</span><span class='line'>                                             <span class="n">now</span> <span class="o">+</span> <span class="o">(</span><span class="n">ERROR_BACKOFF_TIMEOUT</span> <span class="o">*=</span> <span class="mi">2</span><span class="o">),</span>
+</span><span class='line'>                                             <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">,</span>
+</span><span class='line'>                                             <span class="n">pendingIntent</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&quot;Manager started.&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kt">long</span> <span class="n">now</span> <span class="o">=</span> <span class="n">Calendar</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">getTimeInMillis</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// firstly, check if there is sticky event available already</span>
+</span><span class='line'>        <span class="c1">// (service may be restarted by system occasionally)</span>
+</span><span class='line'>        <span class="n">CurrencyRateResponse</span> <span class="n">currencyRateResponse</span> <span class="o">=</span> <span class="n">EventBus</span><span class="o">.</span><span class="na">getDefault</span><span class="o">().</span><span class="na">getStickyEvent</span><span class="o">(</span><span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">currencyRateResponse</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="c1">// then check if we have it stored in SharedPreferences</span>
+</span><span class='line'>            <span class="n">currencyRateResponse</span> <span class="o">=</span> <span class="n">PreferencesToGson</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">context</span><span class="o">)</span>
+</span><span class='line'>                                                    <span class="o">.</span><span class="na">getObject</span><span class="o">(</span><span class="n">PREFS_KEY_CURRENCY_RATES</span><span class="o">,</span> <span class="n">CurrencyRateResponse</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">currencyRateResponse</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="c1">// app fresh start, go fetch rates now</span>
+</span><span class='line'>                <span class="n">alarmManager</span><span class="o">.</span><span class="na">setRepeating</span><span class="o">(</span><span class="n">AlarmManager</span><span class="o">.</span><span class="na">RTC</span><span class="o">,</span>
+</span><span class='line'>                                          <span class="n">now</span><span class="o">,</span>
+</span><span class='line'>                                          <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">,</span>
+</span><span class='line'>                                          <span class="n">pendingIntent</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>                <span class="c1">// found in SharedPreferences; post event and schedule fetch meanwhile to update cache</span>
+</span><span class='line'>                <span class="n">EventBus</span><span class="o">.</span><span class="na">getDefault</span><span class="o">().</span><span class="na">postSticky</span><span class="o">(</span><span class="n">currencyRateResponse</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">alarmManager</span><span class="o">.</span><span class="na">setRepeating</span><span class="o">(</span><span class="n">AlarmManager</span><span class="o">.</span><span class="na">RTC</span><span class="o">,</span>
+</span><span class='line'>                                          <span class="n">now</span><span class="o">,</span>
+</span><span class='line'>                                          <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">,</span>
+</span><span class='line'>                                          <span class="n">pendingIntent</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>            <span class="c1">// sticky event is there, schedule next fetch</span>
+</span><span class='line'>            <span class="n">alarmManager</span><span class="o">.</span><span class="na">setRepeating</span><span class="o">(</span><span class="n">AlarmManager</span><span class="o">.</span><span class="na">RTC</span><span class="o">,</span>
+</span><span class='line'>                                      <span class="n">now</span> <span class="o">+</span> <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">,</span>
+</span><span class='line'>                                      <span class="n">TIMEOUT_FETCH_CURRENCY_RATES</span><span class="o">,</span>
+</span><span class='line'>                                      <span class="n">pendingIntent</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">FetchCommandReceiver</span> <span class="kd">extends</span> <span class="n">BroadcastReceiver</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onReceive</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">Intent</span> <span class="n">intent</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">new</span> <span class="nf">Thread</span><span class="o">(</span><span class="n">fetchRunnable</span><span class="o">).</span><span class="na">start</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+</div></div>
+
+<div class="expand-container">
+<a class="expander" href="#">Memory footprint</a>
+<div class="expandable-content">
+
+<a href="http://oleksandr-yefremov.github.io/images/scheduling_task/nexus5_device/4.png"><img class="caption" src="http://oleksandr-yefremov.github.io/images/scheduling_task/nexus5_device/4.png" /></a>
+<a href="http://oleksandr-yefremov.github.io/images/scheduling_task/nexusS_genymotion/4e.png"><img class="caption" src="http://oleksandr-yefremov.github.io/images/scheduling_task/nexusS_genymotion/4e.png" /></a>
+
+</div></div>
+]]></content>
+  </entry>
+  
+</feed>

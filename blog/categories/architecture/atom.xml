@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: architecture | Yet Another Android Blog]]></title>
+  <link href="http://oleksandr-yefremov.github.io/blog/categories/architecture/atom.xml" rel="self"/>
+  <link href="http://oleksandr-yefremov.github.io/"/>
+  <updated>2015-12-14T01:25:01+02:00</updated>
+  <id>http://oleksandr-yefremov.github.io/</id>
+  <author>
+    <name><![CDATA[Oleksandr Yefremov]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[iOS applications architecture with VIPER]]></title>
+    <link href="http://oleksandr-yefremov.github.io/blog/2015/12/14/iOS-applications-architecture-with-VIPER/"/>
+    <updated>2015-12-14T17:40:53+02:00</updated>
+    <id>http://oleksandr-yefremov.github.io/blog/2015/12/14/iOS-applications-architecture-with-VIPER</id>
+    <content type="html"><![CDATA[<p>Recently I gave the talk about VIPER arhitecture for iOS applications at a local meetup. 
+Slides are available <a href="http://oleksandr-yefremov.github.io/VIPER-slides/">here</a> and blog post will follow soon.</p>
+]]></content>
+  </entry>
+  
+</feed>
