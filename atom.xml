@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Yet Another Android Blog]]></title>
+  <title><![CDATA[Yet Another Dev Blog]]></title>
   <link href="http://oleksandr-yefremov.github.io/atom.xml" rel="self"/>
   <link href="http://oleksandr-yefremov.github.io/"/>
-  <updated>2015-12-14T01:31:21+02:00</updated>
+  <updated>2015-12-14T22:27:06+02:00</updated>
   <id>http://oleksandr-yefremov.github.io/</id>
   <author>
     <name><![CDATA[Oleksandr Yefremov]]></name>
