@@ -87,7 +87,7 @@ public class CurrencyManagerService extends Service {
 		public void run() {
 			log.debug("Fetching CurrencyRate…");
 			RestAdapter restAdapter = new RestAdapter.Builder()
-					                          .setEndpoint("http://btchouse.com:8080")
+					                          .setEndpoint("http://yourendpoint.com:8080")
 					                          .build();
 			CurrencyRatesRestService restService = restAdapter.create(CurrencyRatesRestService.class);
 			restService.getRate("USD", currencyRatesRequestCallback);
